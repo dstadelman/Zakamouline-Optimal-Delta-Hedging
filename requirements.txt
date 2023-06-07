@@ -1,0 +1,5 @@
+matplotlib
+numpy
+py_vollib
+pytest
+scipy

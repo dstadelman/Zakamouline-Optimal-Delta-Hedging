@@ -1,7 +1,7 @@
 
 import numpy as np
 import sys
-sys.path.append('../BSM')
+# sys.path.append('../BSM')
 from bsm import BsmOption, OptionPosition
 from copy import deepcopy
 
