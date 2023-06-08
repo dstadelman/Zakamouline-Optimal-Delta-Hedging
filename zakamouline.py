@@ -56,13 +56,13 @@ def getSigmaModified(sigma, k, isLong):
 
 def hedgebands(position, lambda_, gamma_lower):
     '''
-    NOTE [1] Since taking position as argumenet if if single option it must be added to a position object \n
+    NOTE [1] Since taking position as argument if if single option it must be added to a position object \n
     NOTE [2] Since getting first leg and using params['isLong'] will not work for spreads that are not either ALL long or ALL short (ie straddle would be fine but short condor would fail) \n
 
     TODO Fix note 2  \n
 
     @Params position - OptionPosition Position\n
-            lambda_ - proportional tracnsaction cost where "tc = lambda_ * spot * numShares" \n
+            lambda_ - proportional transaction cost where "tc = lambda_ * spot * numShares" \n
             gamma_lower - risk aversion param \n
     @Return h_plus - positive delta hedge band \n
             h_neg  - negative delta hedge band \n

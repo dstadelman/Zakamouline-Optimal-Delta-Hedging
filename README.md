@@ -40,8 +40,29 @@ for i in range (0, 200)
 ```
 
 ### Interpretation
-![bands](test_zakamouline_plot.png) 
+![bands](README_test_zakamouline_plot.png) 
 [original upstream author's chart](https://user-images.githubusercontent.com/74878922/205398420-9167d891-339a-4832-9ed0-a82dffeddae8.jpg)
+
+"When our position's delta moves outside the band, we hedge to bring our delta back to the edge of the band."
+- Sinclair 99
 
 - If position delta breaches a band, you buy the requisite number of shares to bring delta ***just*** inside closest band. This is referred to as hedging to the band.
     - Eg: In the figure above, if an overnight gap brought your position to Δ = -0.70, you would hedge to the nearest band (down band) at Δ = -0.55 by purchasing 15 shares.
+
+## Testing
+
+"These were for the case of a one-year option with volatility of 0.3, transaction costs of 2 percent, zero interest and carry rates, and a risk aversion of one." - Sinclair p.105
+
+The results from the library look pretty close to the diagrams in Sinclar's Volatility Trading. We do not know the spot price used in the calculation of the long and short calls, and this is used in the calculation of K.
+
+### Long Call
+
+<img src="README_sinclair_long_call.jpg"  width="1024">
+Sinclair p.106
+<img src="README_test_sinclair_long_call.png"  width="1024">
+
+### Short Call
+
+<img src="README_sinclair_short_call.jpg"  width="1024">
+Sinclair p.106
+<img src="README_test_sinclair_short_call.png"  width="1024">
