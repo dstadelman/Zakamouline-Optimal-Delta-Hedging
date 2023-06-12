@@ -41,8 +41,10 @@ for i in range (0, 200)
 ```
 
 ### Interpretation
-![bands](README_test_zakamouline_plot.png) 
+<img src="README_test_zakamouline_plot.png"  width="1024">
+
 [original upstream author's chart](https://user-images.githubusercontent.com/74878922/205398420-9167d891-339a-4832-9ed0-a82dffeddae8.jpg)
+
 
 "When our position's delta moves outside the band, we hedge to bring our delta back to the edge of the band." (Sinclair 99)
 
@@ -57,12 +59,17 @@ The results from the library look pretty close to the diagrams in Sinclar's Vola
 
 ### Long Call
 
-<img src="README_sinclair_long_call.jpg"  width="1024">
-Sinclair p.106
+<img src="README_sinclair_long_call.png"  width="1024">
+
+(Sinclair 106)
+
 <img src="README_test_sinclair_long_call.png"  width="1024">
 
 ### Short Call
 
-<img src="README_sinclair_short_call.jpg"  width="1024">
-Sinclair p.106
+<img src="README_sinclair_short_call.png"  width="1024">
+
+(Sinclair 106)
+
 <img src="README_test_sinclair_short_call.png"  width="1024">
+
