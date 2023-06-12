@@ -7,6 +7,7 @@ My other [repo](https://github.com/liamfayle/Black-Scholes-Merton "repo") contai
 ### References
 - [Optimal Hedging of Options with Transaction Costs](https://www.efmaefm.org/0EFMAMEETINGS/EFMA%20ANNUAL%20MEETINGS/2005-Milan/papers/284-zakamouline_paper.pdf "Optimal Hedging of Options with Transaction Costs") by Valeri. I. Zakamouline.
 - [Volatility Trading: 2nd Edition](https://www.amazon.com/Volatility-Trading-Website-Euan-Sinclair/dp/1118347137 "Volatility Trading: 2nd Edition") by Euan Sinclair.
+- [Optimal Hedging of Options - asymmetry between long and short vol positions](https://quant.stackexchange.com/questions/48603/optimal-hedging-of-options-asymmetry-between-long-and-short-vol-positions)
 
 ### Usage
 - Obtaining hedgeband values at current spot price.
