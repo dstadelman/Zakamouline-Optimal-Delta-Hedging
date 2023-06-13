@@ -1,6 +1,14 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+from py_vollib.black_scholes import black_scholes as py_vollib_black_scholes
+from py_vollib.black_scholes.implied_volatility import implied_volatility as py_vollib_implied_volatility
+from py_vollib.black_scholes.greeks.analytical import delta as py_vollib_delta
+from py_vollib.black_scholes.greeks.analytical import gamma as py_vollib_gamma
+from py_vollib.black_scholes.greeks.analytical import theta as py_vollib_theta
+from py_vollib.black_scholes.greeks.analytical import vega as py_vollib_vega
+from py_vollib.black_scholes.greeks.analytical import rho as py_vollib_rho
+
 import bsm
 import zakamouline
 
@@ -146,4 +154,217 @@ def test_sinclair_short_call():
 
     plot_zakamouline_bands(bsm_deltas, up_bands, down_bands, -1, 0, "README_test_sinclair_short_call.png")
 
+
+def calc_greeks_black_scholes(put_or_call_flag, underlying_price, strike, years_to_expiry, volatility, risk_free_rate:float = 0):
+
+    # t = ((expiration_time - quote_time).total_seconds() / 86400) / 365
+    # assert t > 0
+
+    return (
+        py_vollib_delta(
+            put_or_call_flag.lower()
+        ,   underlying_price
+        ,   strike
+        ,   years_to_expiry
+        ,   risk_free_rate
+        ,   volatility
+        )
+    ,   py_vollib_gamma(
+            put_or_call_flag.lower()
+        ,   underlying_price
+        ,   strike
+        ,   years_to_expiry
+        ,   risk_free_rate
+        ,   volatility
+        )
+    ,   py_vollib_theta(
+            put_or_call_flag.lower()
+        ,   underlying_price
+        ,   strike
+        ,   years_to_expiry
+        ,   risk_free_rate
+        ,   volatility
+        )
+    ,   py_vollib_vega(
+            put_or_call_flag.lower()
+        ,   underlying_price
+        ,   strike
+        ,   years_to_expiry
+        ,   risk_free_rate
+        ,   volatility
+        )
+    ,   py_vollib_rho(
+            put_or_call_flag.lower()
+        ,   underlying_price
+        ,   strike
+        ,   years_to_expiry
+        ,   risk_free_rate
+        ,   volatility
+        )
+    )
+
+
+def calc_price_black_scholes(put_or_call_flag, underlying_price, strike, years_to_expiry, volatility, risk_free_rate:float = 0):
+
+    # years_to_expiry = ((expiration_time - quote_time).total_seconds() / 86400) / 365
+    # assert years_to_expiry > 0
+
+    return py_vollib_black_scholes(
+        put_or_call_flag.lower()
+    ,   underlying_price
+    ,   strike
+    ,   years_to_expiry
+    ,   risk_free_rate
+    ,   volatility
+    )
+
+
+def test_py_vollib_long_call():
+
+    lambda_         = .02
+    gamma_lower     = 1
+
+    isLong = True
+
+    bsm_deltas  = []
+    up_bands    = []
+    down_bands  = []
+
+    for i in range(0, 200):
+
+        try: 
+            # call = bsm.BsmOption(True, 'C', i, 100, 365, 0, sigma=0.3)
+            # long_call = bsm.OptionPosition([call])
+
+            put_or_call_flag = 'C'
+            underlying_price = i
+            strike = 100
+            years_to_expiry = 1
+            volatility = 0.3
+            risk_free_rate = 0
+
+            delta, gamma = (
+                py_vollib_delta(
+                    put_or_call_flag.lower()
+                ,   underlying_price
+                ,   strike
+                ,   years_to_expiry
+                ,   risk_free_rate
+                ,   volatility
+                )
+            ,   py_vollib_gamma(
+                    put_or_call_flag.lower()
+                ,   underlying_price
+                ,   strike
+                ,   years_to_expiry
+                ,   risk_free_rate
+                ,   volatility
+                )
+            )
+
+            k   = zakamouline.getK(lambda_, years_to_expiry, risk_free_rate, volatility, gamma_lower, underlying_price, gamma)
+            h0  = zakamouline.getH0(lambda_, gamma_lower, underlying_price, volatility, years_to_expiry)
+            h1  = zakamouline.getH1(lambda_, years_to_expiry, risk_free_rate, volatility, gamma, gamma_lower)
+
+            sigma_m = zakamouline.getSigmaModified(volatility, k, isLong) #Applies to NOTE 2
+            delta_m = py_vollib_delta(
+                put_or_call_flag.lower()
+            ,   underlying_price
+            ,   strike
+            ,   years_to_expiry
+            ,   risk_free_rate
+            ,   sigma_m
+            )
+
+            up_band     = delta_m + (h1 + h0)
+            down_band   = delta_m - (h1 + h0)
+        
+        except ZeroDivisionError as e:
+            continue
+
+        bsm_delta = delta
+
+        if bsm_delta > .99 or bsm_delta < .01:
+            continue
+
+        bsm_deltas.append(bsm_delta)
+        up_bands.append(up_band)
+        down_bands.append(down_band)
+
+    plot_zakamouline_bands(bsm_deltas, up_bands, down_bands, 0, 1, "README_test_py_vollib_long_call.png")
+
+
+def test_py_vollib_short_call():
+
+    lambda_         = .02
+    gamma_lower     = 1
+
+    isLong = False
+
+    bsm_deltas  = []
+    up_bands    = []
+    down_bands  = []
+
+    for i in range(0, 200):
+
+        try: 
+            # call = bsm.BsmOption(True, 'C', i, 100, 365, 0, sigma=0.3)
+            # long_call = bsm.OptionPosition([call])
+
+            put_or_call_flag = 'C'
+            underlying_price = i
+            strike = 100
+            years_to_expiry = 1
+            volatility = 0.3
+            risk_free_rate = 0
+
+            delta, gamma = (
+                py_vollib_delta(
+                    put_or_call_flag.lower()
+                ,   underlying_price
+                ,   strike
+                ,   years_to_expiry
+                ,   risk_free_rate
+                ,   volatility
+                )
+            ,   py_vollib_gamma(
+                    put_or_call_flag.lower()
+                ,   underlying_price
+                ,   strike
+                ,   years_to_expiry
+                ,   risk_free_rate
+                ,   volatility
+                )
+            )
+
+            k   = zakamouline.getK(lambda_, years_to_expiry, risk_free_rate, volatility, gamma_lower, underlying_price, gamma)
+            h0  = zakamouline.getH0(lambda_, gamma_lower, underlying_price, volatility, years_to_expiry)
+            h1  = zakamouline.getH1(lambda_, years_to_expiry, risk_free_rate, volatility, gamma, gamma_lower)
+
+            sigma_m = zakamouline.getSigmaModified(volatility, k, isLong) #Applies to NOTE 2
+            delta_m = py_vollib_delta(
+                put_or_call_flag.lower()
+            ,   underlying_price
+            ,   strike
+            ,   years_to_expiry
+            ,   risk_free_rate
+            ,   sigma_m
+            )
+
+            up_band     = delta_m + (h1 + h0)
+            down_band   = delta_m - (h1 + h0)
+        
+        except ZeroDivisionError as e:
+            continue
+
+        bsm_delta = delta
+
+        if bsm_delta > .99 or bsm_delta < .01:
+            continue
+
+        bsm_deltas.append(bsm_delta)
+        up_bands.append(up_band)
+        down_bands.append(down_band)
+
+    plot_zakamouline_bands(bsm_deltas, up_bands, down_bands, 0, 1, "README_test_py_vollib_short_call.png")
 
